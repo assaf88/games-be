@@ -12,6 +12,7 @@
     <module>ws-broadcaster</module>
     <module>ws-server</module>
     <module>game-functions/GameFunctions</module>
+      <module>create-game</module>
   </modules>
 
   <name>web-games-backend</name>

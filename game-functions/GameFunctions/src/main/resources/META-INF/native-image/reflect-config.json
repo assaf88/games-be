@@ -1,0 +1,14 @@
+[
+  {
+    "name": "com.amazonaws.services.lambda.runtime.LambdaRuntime",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true,
+    "fields": [
+      { "name": "logger", "allowUnsafeAccess": true }
+    ]
+  }
+]

@@ -3,7 +3,7 @@
 version = 0.1
 
 [default.global.parameters]
-stack_name = "GameFunctionsStack"
+stack_name = "CreateGameStack"
 
 [default.build.parameters]
 cached = true
@@ -16,11 +16,10 @@ lint = true
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 resolve_s3 = true
-s3_prefix = "GameActionHandlerStack"
+s3_prefix = "CreateGameStack"
 region = "us-east-1"
 profile = "prod"
 image_repositories = []
-stack_name = "GameActionHandlerStack"
 
 [default.package.parameters]
 resolve_s3 = true
@@ -35,9 +34,9 @@ warm_containers = "EAGER"
 warm_containers = "EAGER"
 
 [prod.deploy.parameters]
-stack_name = "GameFunctionsStack"
+stack_name = "CreateGameStack"
 resolve_s3 = true
-s3_prefix = "GameFunctionsStack"
+s3_prefix = "CreateGameStack"
 region = "us-east-1"
 profile = "prod"
 confirm_changeset = true

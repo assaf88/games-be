@@ -1,9 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Game Functions
+  Game Action Handler
 
-  Sample SAM Template for game functions
+  Sample SAM Template for game actions
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -12,10 +12,7 @@ Globals:
     MemorySize: 512
 
 Resources:
-  WebGamesRestApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: game
+
   WebGamesWebSocketApi:
     Type: AWS::ApiGatewayV2::Api
     Properties:
@@ -30,36 +27,13 @@ Resources:
       StageName: ws
       AutoDeploy: true
 
-  CreateGameFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: GameFunctions
-      FunctionName: CreateGame
-      Handler: com.assaffin.games.functions.actions.CreateGame::handleRequest
-      Runtime: java21
-      Architectures:
-        - x86_64
-      MemorySize: 512
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-        Variables:
-          PARAM1: VALUE
-      Events:
-        CreateGame:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /create
-            Method: post
-            RestApiId: !Ref WebGamesRestApi
   ActionHandlerFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: GameFunctions
+      PackageType: Image
       FunctionName: ActionHandler
-      Handler: com.assaffin.games.functions.actions.ActionHandler::handleRequest
-      Runtime: java21
-      AutoPublishAlias: SnapStart
-      SnapStart:
-        ApplyOn: PublishedVersions
+      ImageUri: 841027546523.dkr.ecr.us-east-1.amazonaws.com/lambda-native/action-handler:20250627173034
+      Architectures: [ x86_64 ]
       Policies:
         - Statement:
             - Effect: Allow
@@ -89,19 +63,6 @@ Resources:
 
 
 Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  CreateGameApi:
-    Description: "API Gateway endpoint URL for game stage for CreateGameFunction"
-    Value: !Sub "https://${WebGamesRestApi}.execute-api.${AWS::Region}.amazonaws.com/game/create/"
-  CreateGameArn:
-    Description: "CreateGame Lambda Function ARN"
-    Value: !GetAtt CreateGameFunction.Arn
-  CreateGameFunctionIamRole:
-    Description: "Implicit IAM Role created for CreateGameFunction"
-    Value: !GetAtt CreateGameFunctionRole.Arn
-
   WebSocketApiEndpoint:
     Description: "WebSocket API Endpoint URL"
     Value: !Sub "wss://${WebGamesWebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/ws"

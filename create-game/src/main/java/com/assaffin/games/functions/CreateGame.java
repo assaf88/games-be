@@ -1,4 +1,4 @@
-package com.assaffin.games.functions.actions;
+package com.assaffin.games.functions;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;

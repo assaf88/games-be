@@ -1,0 +1,8 @@
+{
+  "body": "{\"action\":\"join\",\"playerName\":\"Alice\"}",
+  "requestContext": {
+    "connectionId": "abc123",
+    "domainName": "localhost",
+    "stage": "dev"
+  }
+}

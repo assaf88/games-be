@@ -24,3 +24,4 @@ hs_err_pid*
 replay_pid*
 /game-functions/.aws-sam/
 /game-functions/GameFunctions/target/
+/game-functions/GameFunctions/dependency-reduced-pom.xml

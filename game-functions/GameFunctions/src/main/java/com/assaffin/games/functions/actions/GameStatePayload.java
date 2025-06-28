@@ -1,9 +1,33 @@
 package com.assaffin.games.functions.actions;
 
-import io.micronaut.serde.annotation.Serdeable;
-
-@Serdeable
 public class GameStatePayload {
-    public String action;
-    public String playerName;
+    private String action;
+    private String playerName;
+
+    // No-argument constructor (needed for Jackson)
+    public GameStatePayload() {}
+
+    // Optionally, you can add a constructor for convenience
+    public GameStatePayload(String action, String playerName) {
+        this.action = action;
+        this.playerName = playerName;
+    }
+
+    // Getter and Setter for action
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    // Getter and Setter for playerName
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
 }

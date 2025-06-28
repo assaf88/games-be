@@ -44,7 +44,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -93,9 +92,29 @@
                 </executions>
                 <configuration>
                     <mainClass>com.assaffin.games.functions.actions.ActionHandler</mainClass>
-<!--                    <configFiles>-->
-<!--                        <configFile>${project.basedir}/src/main/resources/reflect-config.json</configFile>-->
-<!--                    </configFiles>-->
+                    <buildArgs>
+                        <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime</buildArg>
+                        <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime.api.client</buildArg>
+                        <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime.logging</buildArg>
+                        <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime.Context</buildArg>
+                        <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime.LambdaLogger</buildArg>
+                        <buildArg>--initialize-at-build-time=com.fasterxml.jackson</buildArg>
+                        <buildArg>--initialize-at-build-time=com.fasterxml.jackson.databind</buildArg>
+                        <buildArg>--initialize-at-build-time=com.fasterxml.jackson.core</buildArg>
+                        <buildArg>--initialize-at-build-time=com.fasterxml.jackson.datatype</buildArg>
+                        <buildArg>--initialize-at-build-time=com.google.gson</buildArg>
+                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty</buildArg>
+                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty.com.fasterxml.jackson</buildArg>
+                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty.com.fasterxml.jackson.databind</buildArg>
+                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty.com.fasterxml.jackson.core</buildArg>
+                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty.com.fasterxml.jackson.datatype</buildArg>
+                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty.com.google.gson</buildArg>
+                        <buildArg>--no-fallback</buildArg>
+                        <buildArg>--report-unsupported-elements-at-runtime</buildArg>
+                        <buildArg>--allow-incomplete-classpath</buildArg>
+                        <buildArg>--enable-http</buildArg>
+                        <buildArg>--enable-https</buildArg>
+                    </buildArgs>
                 </configuration>
             </plugin>
         </plugins>

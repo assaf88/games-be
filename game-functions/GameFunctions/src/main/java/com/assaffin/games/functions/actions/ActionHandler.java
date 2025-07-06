@@ -11,14 +11,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.TreeMap;
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
+import software.amazon.awssdk.services.apigatewaymanagementapi.ApiGatewayManagementApiClient;
+import software.amazon.awssdk.services.apigatewaymanagementapi.model.PostToConnectionRequest;
+import software.amazon.awssdk.core.SdkBytes;
+
 
 public class ActionHandler implements RequestHandler<APIGatewayV2WebSocketEvent, APIGatewayV2WebSocketResponse> {
     protected static final ObjectMapper objectMapper = new ObjectMapper();
@@ -188,7 +184,7 @@ public class ActionHandler implements RequestHandler<APIGatewayV2WebSocketEvent,
     private APIGatewayV2WebSocketResponse handleJoin(GameStatePayload payload, Context context) {
         String playerName = payload.getPlayerName() != null ? payload.getPlayerName() : "Unknown";
         context.getLogger().log("Handling join action for player: " + playerName);
-        return generateResponse("Joined the game2: " + playerName);
+        return generateResponse("Joined the game4: " + playerName);
     }
 
     private APIGatewayV2WebSocketResponse handleCreate(GameStatePayload payload, Context context) {
@@ -210,148 +206,28 @@ public class ActionHandler implements RequestHandler<APIGatewayV2WebSocketEvent,
     }
 
     private void sendToConnection(String connectionId, String domain, String stage, String message, Context context) throws Exception {
-        String endpoint = "https://" + domain + "/" + stage + "/@connections/" + connectionId;
+        String endpoint = "https://" + domain + "/" + stage;
         
-        context.getLogger().log("Attempting to send message to endpoint: " + endpoint);
+        context.getLogger().log("Sending message to WebSocket connection: " + connectionId);
         context.getLogger().log("Message: " + message);
+        context.getLogger().log("Endpoint: " + endpoint);
         
-        // Get AWS credentials from environment
-        String accessKey = System.getenv("AWS_ACCESS_KEY_ID");
-        String secretKey = System.getenv("AWS_SECRET_ACCESS_KEY");
-        String sessionToken = System.getenv("AWS_SESSION_TOKEN");
-        String region = System.getenv("AWS_REGION");
-        
-        if (accessKey == null || secretKey == null || region == null) {
-            throw new RuntimeException("AWS credentials not found in environment");
-        }
-        
-        // Parse the endpoint to get service and host
-        String service = "execute-api";
-        String host = domain;
-        
-        // Create timestamp
-        ZonedDateTime now = ZonedDateTime.now(java.time.ZoneOffset.UTC);
-        String timestamp = now.format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'"));
-        String dateStamp = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        
-        // Create canonical request
-        String httpMethod = "POST";
-        String canonicalUri = "/" + stage + "/@connections/" + connectionId;
-        String canonicalQueryString = "";
-        
-        // Headers
-        TreeMap<String, String> headers = new TreeMap<>();
-        headers.put("content-type", "application/json");
-        headers.put("host", host);
-        headers.put("x-amz-date", timestamp);
-        if (sessionToken != null) {
-            headers.put("x-amz-security-token", sessionToken);
-        }
-        
-        // Create canonical headers string
-        StringBuilder canonicalHeaders = new StringBuilder();
-        for (var entry : headers.entrySet()) {
-            canonicalHeaders.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
-        }
-        
-        // Create signed headers string
-        StringBuilder signedHeaders = new StringBuilder();
-        for (String headerName : headers.keySet()) {
-            if (signedHeaders.length() > 0) signedHeaders.append(";");
-            signedHeaders.append(headerName);
-        }
-        
-        // Create payload hash
-        String payloadHash = sha256Hex(message);
-        
-        // Create canonical request
-        String canonicalRequest = httpMethod + "\n" +
-                canonicalUri + "\n" +
-                canonicalQueryString + "\n" +
-                canonicalHeaders.toString() + "\n" +
-                signedHeaders.toString() + "\n" +
-                payloadHash;
-        
-        // Create string to sign
-        String algorithm = "AWS4-HMAC-SHA256";
-        String credentialScope = dateStamp + "/" + region + "/" + service + "/aws4_request";
-        String stringToSign = algorithm + "\n" +
-                timestamp + "\n" +
-                credentialScope + "\n" +
-                sha256Hex(canonicalRequest);
-        
-        // Calculate signature
-        String signature = getSignatureKey(secretKey, dateStamp, region, service, stringToSign);
-        
-        // Create authorization header
-        String authorizationHeader = algorithm + " " +
-                "Credential=" + accessKey + "/" + credentialScope + ", " +
-                "SignedHeaders=" + signedHeaders.toString() + ", " +
-                "Signature=" + signature;
-        
-        // Create request with proper headers
-        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                .uri(URI.create(endpoint))
-                .header("Content-Type", "application/json")
-                .header("Host", host)
-                .header("X-Amz-Date", timestamp)
-                .header("Authorization", authorizationHeader)
-                .POST(HttpRequest.BodyPublishers.ofString(message));
-        
-        if (sessionToken != null) {
-            requestBuilder.header("X-Amz-Security-Token", sessionToken);
-        }
-        
-        HttpRequest request = requestBuilder.build();
-        
-        // Send the request with proper resource management
-        try (HttpClient client = HttpClient.newHttpClient()) {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        // Use AWS SDK v2 for API Gateway Management API
+        try (ApiGatewayManagementApiClient client = ApiGatewayManagementApiClient.builder()
+                .endpointOverride(URI.create(endpoint))
+                .build()) {
             
-            context.getLogger().log("Response status: " + response.statusCode());
-            context.getLogger().log("Response body: " + response.body());
+            PostToConnectionRequest request = PostToConnectionRequest.builder()
+                    .connectionId(connectionId)
+                    .data(SdkBytes.fromUtf8String(message))
+                    .build();
             
-            if (response.statusCode() != 200) {
-                throw new RuntimeException("Failed to send message. Response code: " + response.statusCode() + ", Body: " + response.body());
-            }
+            client.postToConnection(request);
+            
+            context.getLogger().log("WebSocket message sent successfully to connection: " + connectionId);
+        } catch (Exception e) {
+            context.getLogger().log("Error sending WebSocket message: " + e.getMessage());
+            throw e;
         }
-    }
-    
-    private static String sha256Hex(String input) throws Exception {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
-        StringBuilder hexString = new StringBuilder();
-        for (byte b : hash) {
-            String hex = Integer.toHexString(0xff & b);
-            if (hex.length() == 1) hexString.append('0');
-            hexString.append(hex);
-        }
-        return hexString.toString();
-    }
-    
-    private static String getSignatureKey(String key, String dateStamp, String regionName, String serviceName, String stringToSign) throws Exception {
-        byte[] kDate = hmacSha256(("AWS4" + key).getBytes(StandardCharsets.UTF_8), dateStamp);
-        byte[] kRegion = hmacSha256(kDate, regionName);
-        byte[] kService = hmacSha256(kRegion, serviceName);
-        byte[] kSigning = hmacSha256(kService, "aws4_request");
-        return hmacSha256Hex(kSigning, stringToSign);
-    }
-    
-    private static byte[] hmacSha256(byte[] key, String data) throws Exception {
-        Mac mac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key, "HmacSHA256");
-        mac.init(secretKeySpec);
-        return mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
-    }
-    
-    private static String hmacSha256Hex(byte[] key, String data) throws Exception {
-        byte[] hash = hmacSha256(key, data);
-        StringBuilder hexString = new StringBuilder();
-        for (byte b : hash) {
-            String hex = Integer.toHexString(0xff & b);
-            if (hex.length() == 1) hexString.append('0');
-            hexString.append(hex);
-        }
-        return hexString.toString();
     }
 }

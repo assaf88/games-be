@@ -27,11 +27,16 @@
             <artifactId>aws-lambda-java-core</artifactId>
             <version>1.2.3</version>
         </dependency>
-        <!-- No external HTTP client needed - using Java's built-in HttpURLConnection -->
-        <dependency>
+                <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-lambda-java-events</artifactId>
             <version>3.11.0</version>
+        </dependency>
+        <!-- AWS SDK v2 for API Gateway Management API -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>apigatewaymanagementapi</artifactId>
+            <version>2.24.12</version>
         </dependency>
 
         <dependency>
@@ -82,12 +87,10 @@
                 </executions>
                 <configuration>
                     <mainClass>com.assaffin.games.functions.actions.ActionHandler</mainClass>
-                    <buildArgs>
+                                        <buildArgs>
                         <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime</buildArg>
-                        <buildArg>--initialize-at-build-time=com.fasterxml.jackson</buildArg>
-                        <buildArg>--initialize-at-build-time=java.security.MessageDigest</buildArg>
-                        <buildArg>--initialize-at-build-time=javax.crypto.Mac</buildArg>
-                        <buildArg>--initialize-at-build-time=javax.crypto.spec.SecretKeySpec</buildArg>
+                        <buildArg>--initialize-at-run-time=com.fasterxml.jackson</buildArg>
+                        <buildArg>--initialize-at-run-time=software.amazon.awssdk</buildArg>
                         <buildArg>--no-fallback</buildArg>
                         <buildArg>--enable-http</buildArg>
                         <buildArg>--enable-https</buildArg>

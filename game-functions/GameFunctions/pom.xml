@@ -27,22 +27,12 @@
             <artifactId>aws-lambda-java-core</artifactId>
             <version>1.2.3</version>
         </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>apigatewaymanagementapi</artifactId>
-            <version>2.31.68</version>
-        </dependency>
+        <!-- No external HTTP client needed - using Java's built-in HttpURLConnection -->
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-lambda-java-events</artifactId>
             <version>3.11.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-lambda-java-runtime-interface-client</artifactId>
-            <version>2.7.0</version>
-        </dependency>
-
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -94,26 +84,15 @@
                     <mainClass>com.assaffin.games.functions.actions.ActionHandler</mainClass>
                     <buildArgs>
                         <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime</buildArg>
-                        <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime.api.client</buildArg>
-                        <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime.logging</buildArg>
-                        <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime.Context</buildArg>
-                        <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime.LambdaLogger</buildArg>
                         <buildArg>--initialize-at-build-time=com.fasterxml.jackson</buildArg>
-                        <buildArg>--initialize-at-build-time=com.fasterxml.jackson.databind</buildArg>
-                        <buildArg>--initialize-at-build-time=com.fasterxml.jackson.core</buildArg>
-                        <buildArg>--initialize-at-build-time=com.fasterxml.jackson.datatype</buildArg>
-                        <buildArg>--initialize-at-build-time=com.google.gson</buildArg>
-                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty</buildArg>
-                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty.com.fasterxml.jackson</buildArg>
-                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty.com.fasterxml.jackson.databind</buildArg>
-                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty.com.fasterxml.jackson.core</buildArg>
-                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty.com.fasterxml.jackson.datatype</buildArg>
-                        <buildArg>--initialize-at-build-time=com.amazonaws.lambda.thirdparty.com.google.gson</buildArg>
+                        <buildArg>--initialize-at-build-time=java.security.MessageDigest</buildArg>
+                        <buildArg>--initialize-at-build-time=javax.crypto.Mac</buildArg>
+                        <buildArg>--initialize-at-build-time=javax.crypto.spec.SecretKeySpec</buildArg>
                         <buildArg>--no-fallback</buildArg>
-                        <buildArg>--report-unsupported-elements-at-runtime</buildArg>
-                        <buildArg>--allow-incomplete-classpath</buildArg>
                         <buildArg>--enable-http</buildArg>
                         <buildArg>--enable-https</buildArg>
+                        <buildArg>--static</buildArg>
+                        <buildArg>--libc=glibc</buildArg>
                     </buildArgs>
                 </configuration>
             </plugin>

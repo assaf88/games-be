@@ -1,41 +1,5 @@
 [
   {
-    "name": "com.amazonaws.services.lambda.runtime.LambdaRuntime",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true,
-    "allDeclaredMethods": true,
-    "allPublicMethods": true,
-    "allDeclaredFields": true,
-    "allPublicFields": true
-  },
-  {
-    "name": "com.amazonaws.services.lambda.runtime.Context",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true,
-    "allDeclaredMethods": true,
-    "allPublicMethods": true,
-    "allDeclaredFields": true,
-    "allPublicFields": true
-  },
-  {
-    "name": "com.amazonaws.services.lambda.runtime.LambdaLogger",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true,
-    "allDeclaredMethods": true,
-    "allPublicMethods": true,
-    "allDeclaredFields": true,
-    "allPublicFields": true
-  },
-  {
-    "name": "com.amazonaws.services.lambda.runtime.api.client.AWSLambda",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true,
-    "allDeclaredMethods": true,
-    "allPublicMethods": true,
-    "allDeclaredFields": true,
-    "allPublicFields": true
-  },
-  {
     "name": "com.fasterxml.jackson.databind.ObjectMapper",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
@@ -45,7 +9,7 @@
     "allPublicFields": true
   },
   {
-    "name": "com.fasterxml.jackson.databind.introspect.AnnotatedClass",
+    "name": "com.assaffin.games.functions.actions.GameStatePayload",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
     "allDeclaredMethods": true,
@@ -63,7 +27,7 @@
     "allPublicFields": true
   },
   {
-    "name": "com.amazonaws.lambda.thirdparty.com.fasterxml.jackson.databind.ObjectMapper",
+    "name": "com.fasterxml.jackson.databind.introspect.AnnotatedClass",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
     "allDeclaredMethods": true,
@@ -72,7 +36,7 @@
     "allPublicFields": true
   },
   {
-    "name": "com.amazonaws.lambda.thirdparty.com.fasterxml.jackson.databind.introspect.AnnotatedClass",
+    "name": "com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketEvent",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
     "allDeclaredMethods": true,
@@ -81,7 +45,7 @@
     "allPublicFields": true
   },
   {
-    "name": "com.amazonaws.lambda.thirdparty.com.fasterxml.jackson.datatype.jsr310.JavaTimeModule",
+    "name": "com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketEvent$RequestContext",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
     "allDeclaredMethods": true,
@@ -90,7 +54,61 @@
     "allPublicFields": true
   },
   {
-    "name": "com.amazonaws.lambda.thirdparty.com.google.gson.Gson",
+    "name": "com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketEvent$RequestIdentity",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true
+  },
+  {
+    "name": "com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketResponse",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true
+  },
+  {
+    "name": "java.security.MessageDigest",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true
+  },
+  {
+    "name": "javax.crypto.Mac",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true
+  },
+  {
+    "name": "javax.crypto.spec.SecretKeySpec",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true
+  },
+  {
+    "name": "java.time.ZonedDateTime",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true
+  },
+  {
+    "name": "java.time.format.DateTimeFormatter",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
     "allDeclaredMethods": true,

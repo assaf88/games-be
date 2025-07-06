@@ -6,6 +6,26 @@
       },
       {
         "pattern": "reflect-config.json"
+      },
+      {
+        "pattern": "META-INF/services/.*"
+      },
+      {
+        "pattern": "META-INF/maven/.*"
+      },
+      {
+        "pattern": "META-INF/services/java.security.Provider"
+      },
+      {
+        "pattern": "META-INF/services/javax.crypto.Mac"
+      },
+      {
+        "pattern": "META-INF/services/java.security.MessageDigest"
+      }
+    ],
+    "excludes": [
+      {
+        "pattern": "META-INF/services/com.amazonaws.lambda.thirdparty.*"
       }
     ]
   }

@@ -32,13 +32,15 @@ Resources:
     Properties:
       PackageType: Image
       FunctionName: ActionHandler
-      ImageUri: 841027546523.dkr.ecr.us-east-1.amazonaws.com/lambda-native/action-handler:20250627173034
+      ImageUri: 841027546523.dkr.ecr.us-east-1.amazonaws.com/lambda-native/action-handler:latest
       Architectures: [ x86_64 ]
       Policies:
         - Statement:
             - Effect: Allow
-              Action: execute-api:ManageConnections
-              Resource: arn:aws:execute-api:*:*:*/*/POST/@connections/*
+              Action: 
+                - execute-api:ManageConnections
+              Resource: 
+                - !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebGamesWebSocketApi}/*"
 
   ActionHandlerIntegration:
     Type: AWS::ApiGatewayV2::Integration

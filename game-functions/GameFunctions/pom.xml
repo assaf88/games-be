@@ -27,7 +27,7 @@
             <artifactId>aws-lambda-java-core</artifactId>
             <version>1.2.3</version>
         </dependency>
-                <dependency>
+        <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-lambda-java-events</artifactId>
             <version>3.11.0</version>
@@ -75,29 +75,38 @@
             </plugin>
 
             <plugin>
-                <groupId>org.graalvm.buildtools</groupId>
-                <artifactId>native-maven-plugin</artifactId>
-                <version>0.10.4</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.assaffin.games.functions.actions.ActionHandler</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
                 <executions>
                     <execution>
+                        <phase>package</phase>
                         <goals>
-                            <goal>compile-no-fork</goal>
+                            <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.assaffin.games.functions.actions.ActionHandler</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <mainClass>com.assaffin.games.functions.actions.ActionHandler</mainClass>
-                                        <buildArgs>
-                        <buildArg>--initialize-at-build-time=com.amazonaws.services.lambda.runtime</buildArg>
-                        <buildArg>--initialize-at-run-time=com.fasterxml.jackson</buildArg>
-                        <buildArg>--initialize-at-run-time=software.amazon.awssdk</buildArg>
-                        <buildArg>--no-fallback</buildArg>
-                        <buildArg>--enable-http</buildArg>
-                        <buildArg>--enable-https</buildArg>
-                        <buildArg>--static</buildArg>
-                        <buildArg>--libc=glibc</buildArg>
-                    </buildArgs>
-                </configuration>
             </plugin>
         </plugins>
     </build>

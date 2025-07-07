@@ -1,16 +1,17 @@
 package com.assaffin.games.functions.actions;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.URI;
+import java.util.logging.Logger;
 import software.amazon.awssdk.services.apigatewaymanagementapi.ApiGatewayManagementApiClient;
 import software.amazon.awssdk.services.apigatewaymanagementapi.model.PostToConnectionRequest;
 import software.amazon.awssdk.core.SdkBytes;
@@ -18,6 +19,7 @@ import software.amazon.awssdk.core.SdkBytes;
 
 public class ActionHandler implements RequestHandler<APIGatewayV2WebSocketEvent, APIGatewayV2WebSocketResponse> {
     protected static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Logger logger = Logger.getLogger(ActionHandler.class.getName());
     private static final String RUNTIME_API = System.getenv("AWS_LAMBDA_RUNTIME_API");
     private static final String RUNTIME_BASE_URL = "http://" + RUNTIME_API + "/2018-06-01/runtime";
 
@@ -140,22 +142,23 @@ public class ActionHandler implements RequestHandler<APIGatewayV2WebSocketEvent,
 
     @Override
     public APIGatewayV2WebSocketResponse handleRequest(APIGatewayV2WebSocketEvent input, Context context) {
-        context.getLogger().log("WebSocket event received: " + input);
+        logger.info("WebSocket event received: " + input);
+        System.out.println("WebSocket event received haha");
 
         GameStatePayload payload = null;
         try {
             String bodyStr = input.getBody();
             payload = objectMapper.readValue(bodyStr, GameStatePayload.class);
         } catch (Exception e) {
-            context.getLogger().log("Failed to parse body: " + e.getMessage());
+            logger.warning("Failed to parse body: " + e.getMessage());
         }
 
         String action = payload != null ? payload.getAction() : "";
 
         APIGatewayV2WebSocketResponse response = switch (action) {
-            case "join" -> handleJoin(payload, context);
-            case "create" -> handleCreate(payload, context);
-            default -> handleDefault(payload, context);
+            case "join" -> handleJoin(payload);
+            case "create" -> handleCreate(payload);
+            default -> handleDefault(payload);
         };
 
         APIGatewayV2WebSocketEvent.RequestContext rc = input.getRequestContext();
@@ -166,34 +169,34 @@ public class ActionHandler implements RequestHandler<APIGatewayV2WebSocketEvent,
         // Send response back to the same connection
         if (!"localhost".equals(domain)) {
             try {
-                sendToConnection(connectionId, domain, stage, response.getBody(), context);
-                context.getLogger().log("Response sent successfully to connection: " + connectionId);
+                sendToConnection(connectionId, domain, stage, response.getBody());
+                logger.info("Response sent successfully to connection: " + connectionId);
                 return generateResponse("Message sent to WebSocket");
-            } catch (Exception e) {
-                context.getLogger().log("Failed to send response: " + e.getMessage());
+        } catch (Exception e) {
+                logger.warning("Failed to send response: " + e.getMessage());
                 // Return the response anyway, even if WebSocket push failed
                 return response;
             }
         } else {
-            context.getLogger().log("Skipping API Gateway call for local testing. Response: " + response.getBody());
+            logger.info("Skipping API Gateway call for local testing. Response: " + response.getBody());
             // Return the actual response for local testing
             return response;
         }
     }
 
-    private APIGatewayV2WebSocketResponse handleJoin(GameStatePayload payload, Context context) {
+    private APIGatewayV2WebSocketResponse handleJoin(GameStatePayload payload) {
         String playerName = payload.getPlayerName() != null ? payload.getPlayerName() : "Unknown";
-        context.getLogger().log("Handling join action for player: " + playerName);
+        logger.info("Handling join action for player: " + playerName);
         return generateResponse("Joined the game4: " + playerName);
     }
 
-    private APIGatewayV2WebSocketResponse handleCreate(GameStatePayload payload, Context context) {
-        context.getLogger().log("Handling create action");
+    private APIGatewayV2WebSocketResponse handleCreate(GameStatePayload payload) {
+        logger.info("Handling create action");
         return generateResponse("Game created");
     }
 
-    private APIGatewayV2WebSocketResponse handleDefault(GameStatePayload payload, Context context) {
-        context.getLogger().log("Handling default action");
+    private APIGatewayV2WebSocketResponse handleDefault(GameStatePayload payload) {
+        logger.info("Handling default action");
         return generateResponse("Default action response");
     }
 
@@ -205,12 +208,12 @@ public class ActionHandler implements RequestHandler<APIGatewayV2WebSocketEvent,
         return response;
     }
 
-    private void sendToConnection(String connectionId, String domain, String stage, String message, Context context) throws Exception {
+    private void sendToConnection(String connectionId, String domain, String stage, String message) throws Exception {
         String endpoint = "https://" + domain + "/" + stage;
         
-        context.getLogger().log("Sending message to WebSocket connection: " + connectionId);
-        context.getLogger().log("Message: " + message);
-        context.getLogger().log("Endpoint: " + endpoint);
+        logger.info("Sending message to WebSocket connection: " + connectionId);
+        logger.info("Message: " + message);
+        logger.info("Endpoint: " + endpoint);
         
         // Use AWS SDK v2 for API Gateway Management API
         try (ApiGatewayManagementApiClient client = ApiGatewayManagementApiClient.builder()
@@ -224,9 +227,9 @@ public class ActionHandler implements RequestHandler<APIGatewayV2WebSocketEvent,
             
             client.postToConnection(request);
             
-            context.getLogger().log("WebSocket message sent successfully to connection: " + connectionId);
+            logger.info("WebSocket message sent successfully to connection: " + connectionId);
         } catch (Exception e) {
-            context.getLogger().log("Error sending WebSocket message: " + e.getMessage());
+            logger.warning("Error sending WebSocket message: " + e.getMessage());
             throw e;
         }
     }

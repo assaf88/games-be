@@ -28,11 +28,17 @@ Resources:
       AutoDeploy: true
 
   ActionHandlerFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Properties:
-      PackageType: Image
+      PackageType: Zip
       FunctionName: ActionHandler
-      ImageUri: 841027546523.dkr.ecr.us-east-1.amazonaws.com/lambda-native/action-handler:latest
+#      Runtime: provided.al2
+      Runtime: provided.al2023
+      Handler: bootstrap
+      CodeUri: ActionHandler-202507071737.zip
+#      Environment:
+#        Variables:
+#          FORCE_REDEPLOY: "CodeUri: ActionHandler-202507071737.zip"
       Architectures: [ x86_64 ]
       Policies:
         - Statement:
@@ -61,7 +67,6 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref ActionHandlerFunction
       Principal: apigateway.amazonaws.com
-
 
 
 Outputs:

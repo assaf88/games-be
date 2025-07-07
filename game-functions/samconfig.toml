@@ -15,15 +15,15 @@ lint = true
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
-resolve_s3 = true
-s3_prefix = "GameActionHandlerStack"
+s3_prefix = "GameActionHandler"
 region = "us-east-1"
 profile = "prod"
 image_repositories = []
 stack_name = "GameActionHandlerStack"
+parameter_overrides = "CodeUri=\"ActionHandler-202507071346.zip\""
 
 [default.package.parameters]
-resolve_s3 = true
+#resolve_s3 = true
 
 [default.sync.parameters]
 watch = true
@@ -34,12 +34,12 @@ warm_containers = "EAGER"
 [default.local_start_lambda.parameters]
 warm_containers = "EAGER"
 
-[prod.deploy.parameters]
-stack_name = "GameFunctionsStack"
-resolve_s3 = true
-s3_prefix = "GameFunctionsStack"
-region = "us-east-1"
-profile = "prod"
-confirm_changeset = true
-capabilities = "CAPABILITY_IAM"
-image_repositories = []
+#[prod.deploy.parameters]
+#stack_name = "GameFunctionsStack"
+##resolve_s3 = true
+#s3_prefix = "GameFunctionsStack"
+#region = "us-east-1"
+#profile = "prod"
+#confirm_changeset = true
+#capabilities = "CAPABILITY_IAM"
+#image_repositories = []

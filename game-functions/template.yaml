@@ -32,13 +32,12 @@ Resources:
     Properties:
       PackageType: Zip
       FunctionName: ActionHandler
-#      Runtime: provided.al2
       Runtime: provided.al2023
       Handler: bootstrap
-      CodeUri: ActionHandler-202507071737.zip
+      CodeUri: ActionHandler-202507071819.zip
 #      Environment:
 #        Variables:
-#          FORCE_REDEPLOY: "CodeUri: ActionHandler-202507071737.zip"
+#          FORCE_REDEPLOY: "CodeUri: ActionHandler-202507071819.zip"
       Architectures: [ x86_64 ]
       Policies:
         - Statement:

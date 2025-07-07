@@ -38,9 +38,6 @@ for %%f in (ActionHandler-*.zip) do (
     )
 )
 
-REM sam package --s3-bucket gamesbe --output-template-file packaged.yaml --template-file template.yaml
-REM sam deploy --template-file packaged.yaml --capabilities CAPABILITY_IAM --parameter-overrides CodeUri="s3://gamesbe/functions/ActionHandler-<timestamp>.zip"
-
 REM Patch the original template.yaml in-place
 echo [INFO] Injecting ZIP name into template.yaml...
 powershell -Command "(Get-Content template.yaml) -replace 'CodeUri: ActionHandler.*\.zip', 'CodeUri: !ZIPNAME!' | Set-Content template.yaml"

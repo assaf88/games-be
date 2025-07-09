@@ -142,8 +142,7 @@ public class ActionHandler implements RequestHandler<APIGatewayV2WebSocketEvent,
 
     @Override
     public APIGatewayV2WebSocketResponse handleRequest(APIGatewayV2WebSocketEvent input, Context context) {
-        logger.info("WebSocket event received: " + input);
-        System.out.println("WebSocket event received haha");
+        //logger.info("WebSocket event received: " + input);
 
         GameStatePayload payload = null;
         try {
@@ -178,7 +177,7 @@ public class ActionHandler implements RequestHandler<APIGatewayV2WebSocketEvent,
                 return response;
             }
         } else {
-            logger.info("Skipping API Gateway call for local testing. Response: " + response.getBody());
+            //logger.info("Skipping API Gateway call for local testing. Response: " + response.getBody());
             // Return the actual response for local testing
             return response;
         }

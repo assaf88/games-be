@@ -24,7 +24,7 @@ Resources:
     Type: AWS::ApiGatewayV2::Stage
     Properties:
       ApiId: !Ref WebGamesWebSocketApi
-      StageName: ws
+      StageName: game
       AutoDeploy: true
 
   ActionHandlerFunction:
@@ -71,7 +71,7 @@ Resources:
 Outputs:
   WebSocketApiEndpoint:
     Description: "WebSocket API Endpoint URL"
-    Value: !Sub "wss://${WebGamesWebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/ws"
+    Value: !Sub "wss://${WebGamesWebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/game"
   ActionHandlerFunctionIamRole:
     Description: "Implicit IAM Role created for ActionHandlerFunction"
     Value: !GetAtt ActionHandlerFunctionRole.Arn

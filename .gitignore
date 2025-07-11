@@ -27,3 +27,5 @@ replay_pid*
 /game-functions/GameFunctions/dependency-reduced-pom.xml
 /create-game/.aws-sam/
 /create-game/target/
+/ws-server/target/classes/application.properties
+/ws-server/.aws-sam/
